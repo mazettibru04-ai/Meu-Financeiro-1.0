@@ -404,22 +404,27 @@ async function addDivida() {
   const prio = document.getElementById('dv-prio').value;
 
   if (!nome || total <= 0) {
-    toast('Preencha nome e valor total');
+    alert('Preencha nome e valor');
     return;
   }
 
-  await addDoc(collection(db, "dividas"), {
-    nome,
-    moeda,
-    total,
-    pago,
-    prio,
-    criadoEm: Date.now()
-  });
+  try {
+    // 🔥 SALVA NO FIREBASE
+    await addDoc(collection(db, "dividas"), {
+      nome,
+      moeda,
+      total,
+      pago,
+      prio,
+      criadoEm: new Date()
+    });
 
-  toast('Dívida salva na nuvem ☁️');
+    alert("🔥 Dívida salva na nuvem!");
 
-  loadDividasFirebase();
+  } catch (e) {
+    console.error(e);
+    alert("Erro ao salvar");
+  }
 }
 async function loadDividasFirebase() {
   const querySnapshot = await getDocs(collection(db, "dividas"));

@@ -432,20 +432,25 @@ async function addDivida() {
     alert("Erro ao salvar");
   }
 }
-async function loadDividasFirebase() {
-  const querySnapshot = await getDocs(collection(db, "dividas"));
+function loadDividasFirebase() {
+  onSnapshot(collection(db, "dividas"), (snapshot) => {
+    data.dividas = [];
 
-  data.dividas = [];
-
-  querySnapshot.forEach((doc) => {
-    data.dividas.push({
-      id: doc.id,
-      ...doc.data()
+    snapshot.forEach((doc) => {
+      data.dividas.push({
+        id: doc.id,
+        ...doc.data()
+      });
     });
-  });
 
-  render();
+    render();
+  });
 }
+window.onload = function() {
+  load();
+  render();
+  loadDividasFirebase();
+};
 // ─── DELETE ──────────────────────────────────────────────
 function delR(id) { data.receitas = data.receitas.filter(x => x.id !== id); save(); render(); }
 function delD(id) { data.despesas = data.despesas.filter(x => x.id !== id); save(); render(); }
@@ -626,8 +631,8 @@ function render() {
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
+import { getFirestore, collection, addDoc, getDocs, onSnapshot } from ...
+  
 const firebaseConfig = {
   apiKey: "AIzaSyCLSxAGB178Pm4EtWHLNXhE_xDj-XAuHFQ",
   authDomain: "meu-fincaneiro.firebaseapp.com",

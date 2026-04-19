@@ -512,12 +512,13 @@ async function registrarPagamento(id) {
     });
 
     toast("Pagamento salvo ✓");
+    editingDivId = null;
 
   } catch (e) {
     console.error(e);
     alert("Erro ao salvar pagamento");
   }
-  
+} 
 // ─── RESERVA ─────────────────────────────────────────────
 function calcReserva() {
   const mensal = parseFloat(document.getElementById('re-mensal').value);

@@ -620,12 +620,16 @@ function render() {
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "SUA_KEY",
+  apiKey: "AIzaSyCLSxAGB178Pm4EtWHLNXhE_xDj-XAuHFQ",
   authDomain: "meu-fincaneiro.firebaseapp.com",
-  projectId: "meu-fincaneiro"
+  projectId: "meu-fincaneiro",
+  storageBucket: "meu-fincaneiro.firebasestorage.app",
+  messagingSenderId: "836819309794",
+  appId: "1:836819309794:web:7e0526e138dea6d2cebabb",
+  measurementId: "G-ESG21PJSJ1"
 };
 
 const app = initializeApp(firebaseConfig);

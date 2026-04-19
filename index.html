@@ -667,13 +667,10 @@ window.addDoc = addDoc;
 window.collection = collection;
 window.getDocs = getDocs;
 window.onSnapshot = onSnapshot;
-window.deleteDoc = deletedoc;
+window.deleteDoc = deleteDoc; // ✅ CORRIGIDO
 window.doc = doc;
-window.onload = function() {
-  load();
-  render();
-  loadDividasFirebase();
-};
+
+// 🔥 TESTE FIREBASE
 window.testFirebase = async function() {
   try {
     await addDoc(collection(db, "teste"), {

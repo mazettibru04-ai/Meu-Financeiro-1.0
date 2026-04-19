@@ -631,8 +631,14 @@ function render() {
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, onSnapshot } from ...
-  
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  getDocs, 
+  onSnapshot 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyCLSxAGB178Pm4EtWHLNXhE_xDj-XAuHFQ",
   authDomain: "meu-fincaneiro.firebaseapp.com",
@@ -646,21 +652,19 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 👇 TORNA GLOBAL
+// 👇 TORNA TUDO GLOBAL (ESSENCIAL)
 window.db = db;
 window.addDoc = addDoc;
 window.collection = collection;
+window.getDocs = getDocs;
+window.onSnapshot = onSnapshot;
 
-// TESTE
-window.testFirebase = async function() {
-  await addDoc(collection(db, "teste"), {
-    nome: "teste ok",
-    data: Date.now()
-  });
-  alert("🔥 Firebase conectado!");
-}
+window.onload = function() {
+  load();
+  render();
+  loadDividasFirebase();
+};
 
 </script>
-
 </body>
 </html>

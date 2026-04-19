@@ -396,21 +396,45 @@ function addDespesa() {
   save(); render(); toast('Despesa adicionada ✓');
 }
 
-function addDivida() {
+async function addDivida() {
   const nome = document.getElementById('dv-nome').value.trim();
   const moeda = document.getElementById('dv-moeda').value;
   const total = parseFloat(document.getElementById('dv-total').value) || 0;
   const pago = parseFloat(document.getElementById('dv-pago').value) || 0;
   const prio = document.getElementById('dv-prio').value;
-  if (!nome || total <= 0) { toast('Preencha nome e valor total'); return; }
-  const hist = pago > 0 ? [{ val: pago, mes: 'Inicial' }] : [];
-  data.dividas.push({ id: Date.now(), nome, moeda, total, pago, prio, hist });
-  document.getElementById('dv-nome').value = '';
-  document.getElementById('dv-total').value = '';
-  document.getElementById('dv-pago').value = '';
-  save(); render(); toast('Dívida cadastrada ✓');
-}
 
+  if (!nome || total <= 0) {
+    toast('Preencha nome e valor total');
+    return;
+  }
+
+  await addDoc(collection(db, "dividas"), {
+    nome,
+    moeda,
+    total,
+    pago,
+    prio,
+    criadoEm: Date.now()
+  });
+
+  toast('Dívida salva na nuvem ☁️');
+
+  loadDividasFirebase();
+}
+async function loadDividasFirebase() {
+  const querySnapshot = await getDocs(collection(db, "dividas"));
+
+  data.dividas = [];
+
+  querySnapshot.forEach((doc) => {
+    data.dividas.push({
+      id: doc.id,
+      ...doc.data()
+    });
+  });
+
+  render();
+}
 // ─── DELETE ──────────────────────────────────────────────
 function delR(id) { data.receitas = data.receitas.filter(x => x.id !== id); save(); render(); }
 function delD(id) { data.despesas = data.despesas.filter(x => x.id !== id); save(); render(); }
@@ -587,8 +611,7 @@ function render() {
 }
 
 // ─── INIT ─────────────────────────────────────────────────
-load();
-render();
+loadDividasFirebase();
 </script>
 <script type="module">
 

@@ -664,7 +664,18 @@ window.onload = function() {
   render();
   loadDividasFirebase();
 };
-
+window.testFirebase = async function() {
+  try {
+    await addDoc(collection(db, "teste"), {
+      nome: "teste ok",
+      data: Date.now()
+    });
+    alert("🔥 Firebase funcionando!");
+  } catch (e) {
+    console.error(e);
+    alert("Erro no Firebase");
+  }
+};
 </script>
 </body>
 </html>

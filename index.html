@@ -378,7 +378,18 @@ function addReceita() {
   document.getElementById('r-data').value = '';
   save(); render(); toast('Receita adicionada ✓');
 }
+function cancelarPagamento(id) {
+  editingDivId = null;
 
+  const valInput = document.getElementById('pp-val-' + id);
+  const mesInput = document.getElementById('pp-mes-' + id);
+
+  if (valInput) valInput.value = '';
+  if (mesInput) mesInput.value = '';
+
+  render();
+}
+  
 function addDespesa() {
   const desc = document.getElementById('d-desc').value.trim();
   const moeda = document.getElementById('d-moeda').value;
@@ -600,7 +611,10 @@ function render() {
             <div class="pay-row">
               <div class="field" style="margin:0;"><label>Valor (${sym})</label><input type="number" id="pp-val-${d.id}" placeholder="0.00" min="0" step="0.01" /></div>
               <div class="field" style="margin:0;"><label>Mês</label><input type="text" id="pp-mes-${d.id}" placeholder="Ex: Abril" /></div>
-              <button class="btn btn-green btn-sm" onclick="registrarPagamento('${d.id}')" style="margin-top:18px;">Salvar</button>
+              <div style="display:flex; gap:6px; margin-top:18px;">
+  <button class="btn btn-green btn-sm" onclick="registrarPagamento('${d.id}')">Salvar</button>
+  <button class="btn btn-outline btn-sm" onclick="cancelarPagamento('${d.id}')">Cancelar</button>
+</div>
             </div>
             ${histHtml}
           </div>` : (d.hist && d.hist.length > 0 && !isEditing ? `<div class="pay-panel">${histHtml}</div>` : '');

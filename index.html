@@ -454,8 +454,15 @@ window.onload = function() {
 // ─── DELETE ──────────────────────────────────────────────
 function delR(id) { data.receitas = data.receitas.filter(x => x.id !== id); save(); render(); }
 function delD(id) { data.despesas = data.despesas.filter(x => x.id !== id); save(); render(); }
-function delDv(id) { if (editingDivId === id) editingDivId = null; data.dividas = data.dividas.filter(x => x.id !== id); save(); render(); }
-
+async function delDv(id) {
+  try {
+    await deleteDoc(doc(db, "dividas", id));
+    toast("Dívida excluída ✓");
+  } catch (e) {
+    console.error(e);
+    alert("Erro ao excluir");
+  }
+}
 // ─── PAGAMENTO ───────────────────────────────────────────
 function toggleEdit(id) {
   editingDivId = editingDivId === id ? null : id;
@@ -636,8 +643,10 @@ import {
   collection, 
   addDoc, 
   getDocs, 
-  onSnapshot 
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  onSnapshot,
+  deleteDoc,
+  doc } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCLSxAGB178Pm4EtWHLNXhE_xDj-XAuHFQ",
@@ -658,7 +667,8 @@ window.addDoc = addDoc;
 window.collection = collection;
 window.getDocs = getDocs;
 window.onSnapshot = onSnapshot;
-
+window.deleteDoc = deletedoc;
+window.doc = doc;
 window.onload = function() {
   load();
   render();

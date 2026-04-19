@@ -465,6 +465,10 @@ window.onload = function() {
 function delR(id) { data.receitas = data.receitas.filter(x => x.id !== id); save(); render(); }
 function delD(id) { data.despesas = data.despesas.filter(x => x.id !== id); save(); render(); }
 async function delDv(id) {
+  const confirmar = confirm("Tem certeza que deseja excluir esta dívida?");
+
+  if (!confirmar) return;
+
   try {
     await deleteDoc(doc(db, "dividas", id));
     toast("Dívida excluída ✓");

@@ -483,22 +483,41 @@ function toggleEdit(id) {
   render();
 }
 
-function registrarPagamento(id) {
+async function registrarPagamento(id) {
   const d = data.dividas.find(x => x.id === id);
   if (!d) return;
+
   const val = parseFloat(document.getElementById('pp-val-' + id).value);
   const mes = document.getElementById('pp-mes-' + id).value.trim() || 'Agora';
-  if (isNaN(val) || val <= 0) { toast('Informe o valor pago'); return; }
-  if (d.pago + val > d.total) { toast('Valor maior que o saldo devedor'); return; }
-  d.pago += val;
-  d.hist = d.hist || [];
-  d.hist.push({ val, mes });
-  if (d.pago >= d.total) editingDivId = null;
-  document.getElementById('pp-val-' + id).value = '';
-  document.getElementById('pp-mes-' + id).value = '';
-  save(); render(); toast('Pagamento registrado ✓');
-}
 
+  if (isNaN(val) || val <= 0) {
+    toast('Informe o valor pago');
+    return;
+  }
+
+  if (d.pago + val > d.total) {
+    toast('Valor maior que o saldo');
+    return;
+  }
+
+  try {
+    const ref = doc(db, "dividas", id);
+
+    const novoPago = d.pago + val;
+    const novoHist = [...(d.hist || []), { val, mes }];
+
+    await updateDoc(ref, {
+      pago: novoPago,
+      hist: novoHist
+    });
+
+    toast("Pagamento salvo ✓");
+
+  } catch (e) {
+    console.error(e);
+    alert("Erro ao salvar pagamento");
+  }
+  
 // ─── RESERVA ─────────────────────────────────────────────
 function calcReserva() {
   const mensal = parseFloat(document.getElementById('re-mensal').value);
@@ -675,6 +694,9 @@ const firebaseConfig = {
   measurementId: "G-ESG21PJSJ1"
 };
 
+import { updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+window.updateDoc = updateDoc;
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 

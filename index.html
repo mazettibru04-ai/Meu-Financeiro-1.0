@@ -716,109 +716,57 @@ const all = [
 
 // ─── INIT ─────────────────────────────────────────────────
 </script>
-<!-- MANTIVE TODO SEU HTML ORIGINAL -->
-<!-- ALTEREI APENAS O SCRIPT PARA SINCRONIZAR TUDO -->
+<script type="module">
 
-<script>
-// ─── STATE ───────────────────────────────────────────────
-let data = {
-  taxa: 6.10,
-  receitas: [],
-  despesas: [],
-  dividas: []
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  getDocs, 
+  onSnapshot,
+  deleteDoc,
+  doc } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCLSxAGB178Pm4EtWHLNXhE_xDj-XAuHFQ",
+  authDomain: "meu-fincaneiro.firebaseapp.com",
+  projectId: "meu-fincaneiro",
+  storageBucket: "meu-fincaneiro.firebasestorage.app",
+  messagingSenderId: "836819309794",
+  appId: "1:836819309794:web:7e0526e138dea6d2cebabb",
+  measurementId: "G-ESG21PJSJ1"
 };
 
-let editingDivId = null;
+import { updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ─── UTILS ───────────────────────────────────────────────
-function taxa() { return parseFloat(document.getElementById('taxa').value) || 6.10; }
-function toE(brl) { return brl / taxa(); }
-function toB(eur) { return eur * taxa(); }
+window.updateDoc = updateDoc;
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2000);
-}
+// 👇 TORNA TUDO GLOBAL (ESSENCIAL)
+window.db = db;
+window.addDoc = addDoc;
+window.collection = collection;
+window.getDocs = getDocs;
+window.onSnapshot = onSnapshot;
+window.deleteDoc = deleteDoc; //
+window.doc = doc;
 
-// ─── RECEITAS FIREBASE ───────────────────────────────────
-async function addReceita() {
-  const desc = document.getElementById('r-desc').value.trim();
-  const val = parseFloat(document.getElementById('r-val').value);
-  const cat = document.getElementById('r-cat').value;
-  const mes = document.getElementById('r-data').value || 'Este mês';
-
-  if (!desc || !val) return toast("Preencha os campos");
-
-  await addDoc(collection(db, "receitas"), {
-    desc, val, cat, mes, criadoEm: Date.now()
-  });
-
-  toast("Receita salva ☁️");
-}
-
-// ─── DESPESAS FIREBASE ───────────────────────────────────
-async function addDespesa() {
-  const desc = document.getElementById('d-desc').value.trim();
-  const moeda = document.getElementById('d-moeda').value;
-  const val = parseFloat(document.getElementById('d-val').value);
-  const cat = document.getElementById('d-cat').value;
-  const mes = document.getElementById('d-data').value || 'Este mês';
-
-  if (!desc || !val) return toast("Preencha os campos");
-
-  await addDoc(collection(db, "despesas"), {
-    desc,
-    valEUR: moeda === 'eur' ? val : val / taxa(),
-    valBRL: moeda === 'brl' ? val : val * taxa(),
-    cat,
-    mes,
-    moeda,
-    criadoEm: Date.now()
-  });
-
-  toast("Despesa salva ☁️");
-}
-
-// ─── LISTENERS REALTIME ──────────────────────────────────
-function loadReceitas() {
-  onSnapshot(collection(db, "receitas"), snap => {
-    data.receitas = [];
-    snap.forEach(doc => {
-      data.receitas.push({ id: doc.id, ...doc.data() });
+// 🔥 TESTE FIREBASE
+window.testFirebase = async function() {
+  try {
+    await addDoc(collection(db, "teste"), {
+      nome: "teste ok",
+      data: Date.now()
     });
-    render();
-  });
-}
-
-function loadDespesas() {
-  onSnapshot(collection(db, "despesas"), snap => {
-    data.despesas = [];
-    snap.forEach(doc => {
-      data.despesas.push({ id: doc.id, ...doc.data() });
-    });
-    render();
-  });
-}
-
-// ─── DELETES ─────────────────────────────────────────────
-async function delR(id) {
-  await deleteDoc(doc(db, "receitas", id));
-}
-
-async function delD(id) {
-  await deleteDoc(doc(db, "despesas", id));
-}
-
-// ─── INIT ────────────────────────────────────────────────
-window.onload = function () {
-  loadReceitas();
-  loadDespesas();
-  loadDividasFirebase(); // mantém o seu
+    alert("🔥 Firebase funcionando!");
+  } catch (e) {
+    console.error(e);
+    alert("Erro no Firebase");
+  }
 };
-
-</script>
 </script>
 </body>
 </html>

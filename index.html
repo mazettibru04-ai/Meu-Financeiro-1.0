@@ -715,162 +715,58 @@ const all = [
 }
 
 // ─── INIT ─────────────────────────────────────────────────
+</script>
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  addDoc,
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  getDocs, 
   onSnapshot,
   deleteDoc,
-  doc,
-  updateDoc
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  doc } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// 🔥 CONFIG
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU_PROJETO.firebaseapp.com",
-  projectId: "SEU_PROJETO",
+  apiKey: "AIzaSyCLSxAGB178Pm4EtWHLNXhE_xDj-XAuHFQ",
+  authDomain: "meu-fincaneiro.firebaseapp.com",
+  projectId: "meu-fincaneiro",
+  storageBucket: "meu-fincaneiro.firebasestorage.app",
+  messagingSenderId: "836819309794",
+  appId: "1:836819309794:web:7e0526e138dea6d2cebabb",
+  measurementId: "G-ESG21PJSJ1"
 };
 
+import { updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+window.updateDoc = updateDoc;
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// ─── STATE ─────────────────────
-let data = {
-  receitas: [],
-  despesas: [],
-  dividas: []
-};
+// 👇 TORNA TUDO GLOBAL (ESSENCIAL)
+window.db = db;
+window.addDoc = addDoc;
+window.collection = collection;
+window.getDocs = getDocs;
+window.onSnapshot = onSnapshot;
+window.deleteDoc = deleteDoc; //
+window.doc = doc;
 
-// ─── UTILS ─────────────────────
-function fe(v){return '€ ' + v.toFixed(2)}
-function fb(v){return 'R$ ' + v.toFixed(2)}
-function taxa(){ return 6.10 }
-function toB(e){ return e * taxa() }
-function toE(b){ return b / taxa() }
-
-// ─── RECEITAS ───────────────────
-window.addReceita = async function(){
-  const desc = document.getElementById('r-desc').value;
-  const val = parseFloat(document.getElementById('r-val').value);
-  const cat = document.getElementById('r-cat').value;
-  const mes = document.getElementById('r-data').value || 'Este mês';
-
-  if(!desc || !val) return alert("Preencha");
-
-  await addDoc(collection(db,"receitas"),{
-    desc,val,cat,mes,criadoEm:Date.now()
-  });
-};
-
-function loadReceitas(){
-  onSnapshot(collection(db,"receitas"), snap=>{
-    data.receitas=[];
-    snap.forEach(doc=>{
-      data.receitas.push({id:doc.id,...doc.data()});
+// 🔥 TESTE FIREBASE
+window.testFirebase = async function() {
+  try {
+    await addDoc(collection(db, "teste"), {
+      nome: "teste ok",
+      data: Date.now()
     });
-    render();
-  });
-}
-
-window.delR = async function(id){
-  await deleteDoc(doc(db,"receitas",id));
+    alert("🔥 Firebase funcionando!");
+  } catch (e) {
+    console.error(e);
+    alert("Erro no Firebase");
+  }
 };
-
-// ─── DESPESAS ───────────────────
-window.addDespesa = async function(){
-  const desc = document.getElementById('d-desc').value;
-  const val = parseFloat(document.getElementById('d-val').value);
-  const cat = document.getElementById('d-cat').value;
-  const mes = document.getElementById('d-data').value || 'Este mês';
-
-  if(!desc || !val) return alert("Preencha");
-
-  await addDoc(collection(db,"despesas"),{
-    desc,
-    valEUR: val,
-    valBRL: toB(val),
-    cat,
-    mes,
-    criadoEm:Date.now()
-  });
-};
-
-function loadDespesas(){
-  onSnapshot(collection(db,"despesas"), snap=>{
-    data.despesas=[];
-    snap.forEach(doc=>{
-      data.despesas.push({id:doc.id,...doc.data()});
-    });
-    render();
-  });
-}
-
-window.delD = async function(id){
-  await deleteDoc(doc(db,"despesas",id));
-};
-
-// ─── DIVIDAS ───────────────────
-window.addDivida = async function(){
-  const nome = document.getElementById('dv-nome').value;
-  const total = parseFloat(document.getElementById('dv-total').value);
-
-  if(!nome || !total) return alert("Preencha");
-
-  await addDoc(collection(db,"dividas"),{
-    nome,
-    total,
-    pago:0,
-    criadoEm:Date.now()
-  });
-};
-
-function loadDividas(){
-  onSnapshot(collection(db,"dividas"), snap=>{
-    data.dividas=[];
-    snap.forEach(doc=>{
-      data.dividas.push({id:doc.id,...doc.data()});
-    });
-    render();
-  });
-}
-
-// ─── RENDER ─────────────────────
-function render(){
-
-  // RECEITAS
-  document.getElementById('lista-receitas').innerHTML =
-    data.receitas.map(r=>`
-    <div>
-      ${r.desc} - ${fe(r.val)}
-      <button onclick="delR('${r.id}')">X</button>
-    </div>
-  `).join('');
-
-  // DESPESAS
-  document.getElementById('lista-despesas').innerHTML =
-    data.despesas.map(d=>`
-    <div>
-      ${d.desc} - ${fe(d.valEUR)}
-      <button onclick="delD('${d.id}')">X</button>
-    </div>
-  `).join('');
-
-  // DÍVIDAS
-  document.getElementById('lista-dividas').innerHTML =
-    data.dividas.map(d=>`
-    <div>
-      ${d.nome} - ${fb(d.total)}
-    </div>
-  `).join('');
-}
-
-// ─── INIT ──────────────────────
-loadReceitas();
-loadDespesas();
-loadDividas();
-
 </script>
+</body>
+</html>

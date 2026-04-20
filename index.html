@@ -604,11 +604,23 @@ function render() {
   }))
 );
 
+const dividasCriadas = data.dividas.map(d => ({
+  id: d.criadoEm || Date.now(),
+  desc: `Dívida criada: ${d.nome}`,
+  val: d.moeda === 'eur' ? d.total : toE(d.total),
+  valBRL: d.moeda === 'brl' ? d.total : toB(d.total),
+  mes: 'Criação',
+  tipo: 'dv'
+}));
+
 const all = [
   ...data.receitas.map(r=>({...r,tipo:'r'})),
   ...data.despesas.map(d=>({...d,tipo:'d'})),
-  ...pagamentos
-].sort((a,b)=>b.id-a.id).slice(0,8);
+  ...pagamentos,
+  ...dividasCriadas
+]
+.sort((a,b)=>b.id-a.id)
+.slice(0,8);.sort((a,b)=>b.id-a.id).slice(0,8);
   document.getElementById('recent-list').innerHTML = all.length===0
     ? '<div class="empty">Nenhum lançamento ainda</div>'
     : all.map(x => x.tipo==='r'

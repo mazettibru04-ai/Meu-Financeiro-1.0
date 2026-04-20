@@ -613,15 +613,6 @@ const dividasCriadas = data.dividas.map(d => ({
   tipo: 'dv'
 }));
 
-const dividasCriadas = data.dividas.map(d => ({
-  id: d.criadoEm || Date.now(),
-  desc: `Dívida criada: ${d.nome}`,
-  val: d.moeda === 'eur' ? d.total : toE(d.total),
-  valBRL: d.moeda === 'brl' ? d.total : toB(d.total),
-  mes: 'Criação',
-  tipo: 'dv'
-}));
-
 const all = [
   ...data.receitas.map(r=>({...r,tipo:'r'})),
   ...data.despesas.map(d=>({...d,tipo:'d'})),

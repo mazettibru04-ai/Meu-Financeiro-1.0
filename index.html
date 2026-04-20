@@ -450,13 +450,14 @@ function loadDividasFirebase() {
 
   unsubscribeDividas = onSnapshot(collection(db, "dividas"), (snapshot) => {
 
-    snapshot.forEach((doc) => {
-      data.dividas.push({
-        id: doc.id,
-        ...doc.data()
-      });
-    });
+    data.dividas = [];
 
+snapshot.forEach((doc) => {
+  data.dividas.push({
+    id: doc.id,
+    ...doc.data()
+  });
+});
     render();
   });
 }
@@ -619,12 +620,8 @@ const all = [
   ...pagamentos,
   ...dividasCriadas
 ]
-const all = [
-  ...data.receitas.map(r=>({...r,tipo:'r'})),
-  ...data.despesas.map(d=>({...d,tipo:'d'})),
-  ...pagamentos,
-  ...dividasCriadas
-]
+.sort((a,b)=>b.id-a.id)
+.slice(0,8);
 .sort((a,b)=>b.id-a.id)
 .slice(0,8);
   document.getElementById('recent-list').innerHTML = all.length===0

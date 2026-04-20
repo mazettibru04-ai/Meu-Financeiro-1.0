@@ -442,9 +442,12 @@ async function addDivida() {
     alert("Erro ao salvar");
   }
 }
+let unsubscribeDividas = null;
+
 function loadDividasFirebase() {
-  onSnapshot(collection(db, "dividas"), (snapshot) => {
-    data.dividas = [];
+  if (unsubscribeDividas) unsubscribeDividas();
+
+  unsubscribeDividas = onSnapshot(collection(db, "dividas"), (snapshot) => {
 
     snapshot.forEach((doc) => {
       data.dividas.push({

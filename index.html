@@ -419,13 +419,14 @@ async function addDivida() {
 
   try {
     await addDoc(collection(db, "dividas"), {
-      nome,
-      moeda,
-      total,
-      pago,
-      prio,
-      criadoEm: new Date()
-    });
+  nome,
+  moeda,
+  total,
+  pago,
+  prio,
+  criadoEm: Date.now(),
+  tipo: 'divida'
+});
 
     alert("🔥 Dívida salva na nuvem!");
 

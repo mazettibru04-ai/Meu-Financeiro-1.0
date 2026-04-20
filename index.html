@@ -604,7 +604,7 @@ const all = [
   ...data.receitas.map(r=>({...r,tipo:'r'})),
   ...data.despesas.map(d=>({...d,tipo:'d'})),
   ...pagamentos
-].sort((a,b)=>b.id-a.id).slice(0,8);.sort((a,b)=>b.id-a.id).slice(0,8);
+].sort((a,b)=>b.id-a.id).slice(0,8);
   document.getElementById('recent-list').innerHTML = all.length===0
     ? '<div class="empty">Nenhum lançamento ainda</div>'
     : all.map(x => x.tipo==='r'

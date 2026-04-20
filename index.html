@@ -589,10 +589,22 @@ function render() {
     : sc.map(([c,v]) => `<div class="bar-wrap"><div class="bar-label"><span>${c}</span><span>${fb(v)} · ${fe(toE(v))}</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/mx*100)}%;background:${CATS[c]||'#888'};"></div></div></div>`).join('');
 
   // Recent
-  const all = [
-    ...data.receitas.map(r=>({...r,tipo:'r'})),
-    ...data.despesas.map(d=>({...d,tipo:'d'}))
-  ].sort((a,b)=>b.id-a.id).slice(0,8);
+  const pagamentos = data.dividas.flatMap(d => 
+  (d.hist || []).map(h => ({
+    id: Date.now() + Math.random(),
+    desc: `Pagamento: ${d.nome}`,
+    val: d.moeda === 'eur' ? h.val : toE(h.val),
+    valBRL: d.moeda === 'brl' ? h.val : toB(h.val),
+    mes: h.mes,
+    tipo: 'p'
+  }))
+);
+
+const all = [
+  ...data.receitas.map(r=>({...r,tipo:'r'})),
+  ...data.despesas.map(d=>({...d,tipo:'d'})),
+  ...pagamentos
+].sort((a,b)=>b.id-a.id).slice(0,8);.sort((a,b)=>b.id-a.id).slice(0,8);
   document.getElementById('recent-list').innerHTML = all.length===0
     ? '<div class="empty">Nenhum lançamento ainda</div>'
     : all.map(x => x.tipo==='r'

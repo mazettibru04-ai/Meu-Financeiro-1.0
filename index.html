@@ -623,28 +623,26 @@ const all = [
 .sort((a,b)=>b.id-a.id)
 .slice(0,8);
   document.getElementById('recent-list').innerHTML = all.length===0
-    ? '<div class="empty">Nenhum lançamento ainda</div>'
-    : all.map(x => x.tipo==='r'
-      ? `<div class="tx-item"><div><div class="tx-name">${x.desc}</div><div class="tx-meta">${x.cat ? x.cat + ' · ' : ''}${x.mes}</div></div><div style="text-align:right;"><div class="tx-amt g">+${fe(x.val)}</div><div class="tx-sub">${fb(toB(x.val))}</div></div></div>`
-: `<div class="tx-item">
-    <div>
-      <div class="tx-name">${x.desc}</div>
-      <div class="tx-meta">${x.cat ? x.cat + ' · ' : ''}${x.mes}</div>
-    </div>
-    <div style="text-align:right;">
-      <div class="tx-amt r">-${fe(x.val || x.valEUR)}</div>
-      <div class="tx-sub">${fb(x.valBRL || toB(x.val || 0))}</div>
-    </div>
-  </div>`    <div>
-      <div class="tx-name">${x.desc}</div>
-      <div class="tx-meta">${x.cat ? x.cat + ' · ' : ''}${x.mes}</div>
-    </div>
-    <div style="text-align:right;">
-      <div class="tx-amt r">-${fe(x.val || x.valEUR)}</div>
-      <div class="tx-sub">${fb(x.valBRL || toB(x.val || 0))}</div>
-    </div>
-  </div>`<div class="tx-sub">${fb(x.valBRL)}</div></div></div>`
-    ).join('');
+  ? '<div class="empty">Nenhum lançamento ainda</div>'
+  : all.map(x => {
+      const isReceita = x.tipo === 'r';
+      const valorEUR = x.val || x.valEUR || 0;
+      const valorBRL = x.valBRL || toB(valorEUR);
+
+      return `
+      <div class="tx-item">
+        <div>
+          <div class="tx-name">${x.desc}</div>
+          <div class="tx-meta">${x.cat ? x.cat + ' · ' : ''}${x.mes}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="tx-amt ${isReceita ? 'g' : 'r'}">
+            ${isReceita ? '+' : '-'}${fe(valorEUR)}
+          </div>
+          <div class="tx-sub">${fb(valorBRL)}</div>
+        </div>
+      </div>`;
+    }).join('');
 
   // Receitas list
   document.getElementById('lista-receitas').innerHTML = data.receitas.length===0

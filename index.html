@@ -620,7 +620,7 @@ const all = [
   // Despesas list
   document.getElementById('lista-despesas').innerHTML = data.despesas.length===0
     ? '<div class="empty">Nenhuma despesa ainda</div>'
-    : data.despesas.map(d=>`<div class="tx-item"><div><div class="tx-name">${d.desc}</div><div class="tx-meta">${d.cat} · ${d.mes}</div></div><div style="display:flex;align-items:center;"><div style="text-align:right;"><div class="tx-amt r">-${fe(d.valEUR)}</div><div class="tx-sub">${fb(d.valBRL)}</div></div><button class="del-btn" onclick="delD('${d.id}')">×</button></div></div>`).join('');
+    : data.despesas.map(d=>`<div class="tx-item"><div><div class="tx-name">${d.desc}</div><div class="tx-meta">${d.cat} · ${d.mes}</div></div><div style="display:flex;align-items:center;"><div style="text-align:right;"><div class="tx-amt r">-${fe(d.valEUR)}</div><div class="tx-sub">${fb(d.valBRL)}</div></div><button class="del-btn" onclick="delD(${d.id})">×</button></div></div>`).join('');
 
   // Dívidas
   document.getElementById('lista-dividas').innerHTML = data.dividas.length===0
